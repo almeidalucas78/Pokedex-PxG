@@ -24,6 +24,8 @@
           <option>Dex ↓</option>
           <option>Nome ↑</option>
           <option>Nome ↓</option>
+          <option>Level ↑</option>
+          <option>Level ↓</option>
         </select>
         <button>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon h-4 w-4 hidden dark:block" data-lov-id="src/pages/Index.tsx:72:12" data-lov-name="Moon" data-component-path="src/pages/Index.tsx" data-component-line="72" data-component-file="Index.tsx" data-component-name="Moon" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20hidden%20dark%3Ablock%22%7D">
@@ -51,6 +53,18 @@
               <!-- SLIDER DUPLO -->
               <div id="levelSlider"></div>
               <span id="rangeOutput" class="range-values">—</span>
+              <div class="level-shortcuts">
+                <button data-max="10" class="btn btn-success">Lvl 10-</button>
+                <button data-max="20" class="btn btn-success">Lvl 20-</button>
+                <button data-max="30" class="btn btn-success">Lvl 30-</button>
+                <button data-min="61" class="btn btn-success">Lvl 61+</button>
+              </div>
+            </div>
+            <div class="sidebar-area">
+              <span>Habilidades</span>
+              <form id="abilitiesFilter" class="filter">
+                <fieldset></fieldset>
+              </form>
             </div>
           </div>
         </div>
@@ -89,17 +103,24 @@
     const cardEL = document.querySelector('.card-area');
     const pokemonLenght = document.querySelector('#pokemon-lenght');
     const form = document.getElementById('typeFilter');
+    const formAbilities = document.getElementById('abilitiesFilter');
     const fieldset = form?.querySelector('fieldset');
+    const abilitiesFieldset = formAbilities?.querySelector('fieldset');
     const levelSliderEl = document.getElementById('levelSlider');
     const rangeOutput = document.getElementById('rangeOutput');
+    const sortSelect = document.getElementById('sort');
 
     // manter todos os pokemons em memória
     let ALL = [];
     let LEVEL_MIN = 1;
     let LEVEL_MAX = 100;
     let selType = '';      // rádio selecionado
+    let selAbility = '';      // rádio selecionado
     let selLevel = [1, 100]; // [min,max] do slider
+    let selSort = 'Dex ↑'; // opção de ordenação
+
     //helped para o pokedex
+
     const pad3 = (n) => String(n ?? '').padStart(3, '0');
 
     // Função para obter todos os tipos de Pokémon
@@ -108,11 +129,26 @@
       for (const p of arr) (p.types || []).forEach(t => set.add(t.trim()));
       return [...set].sort((a, b) => a.localeCompare(b));
     }
+
     // Monta os rádios do filtro de tipo
     function renderTypeFilter(types) {
       fieldset.innerHTML = [
         `<label><input type="radio" name="type" value="" checked> Todos</label>`,
         ...types.map(t => `<label><input type="radio" name="type" value="${t.toLowerCase()}"> ${t}</label>`)
+      ].join('');
+    }
+
+    function getAllAbilities(arr) {
+      const set = new Set();
+      for (const p of arr) (p.abilities || []).forEach(t => set.add(t.trim()));
+      return [...set].sort((a, b) => a.localeCompare(b));
+    }
+
+    function renderAbilitiesFilter(abilities) {
+      if (!abilitiesFieldset) return;
+      abilitiesFieldset.innerHTML = [
+        `<label><input type="radio" name="ability" value="" checked> Todas</label>`,
+        ...abilities.map(a => `<label><input type="radio" name="ability" value="${a.toLowerCase()}"> ${a}</label>`)
       ].join('');
     }
 
@@ -162,13 +198,27 @@
       cardEL.innerHTML = items.map(renderCardHTML).join('');
       if (pokemonLenght) pokemonLenght.innerText = `Total de Pokémons: ${items.length}`;
     }
-    // aplica TODOS os filtros (tipo + nível)
 
+    // Ordena os pokémons de acordo com a opção selecionada
+    function sortPokemons(arr) {
+      switch (selSort) {
+        case 'Dex ↑': return arr.sort((a, b) => a.dex - b.dex);
+        case 'Dex ↓': return arr.sort((a, b) => b.dex - a.dex);
+        case 'Nome ↑': return arr.sort((a, b) => a.name.localeCompare(b.name));
+        case 'Nome ↓': return arr.sort((a, b) => b.name.localeCompare(a.name));
+        case 'Level ↑': return arr.sort((a, b) => (a.level || 0) - (b.level || 0));
+        case 'Level ↓': return arr.sort((a, b) => (b.level || 0) - (a.level || 0));
+        default: return arr;
+      }
+    }
+
+    // aplica TODOS os filtros (tipo + nível)
     function applyFilters() {
       const [minL, maxL] = selLevel;
       const out = ALL.filter(p => {
         //filtro por tipo (optional)
         if (selType && !(p.types || []).some(t => String(t).toLowerCase() === selType)) return false;
+        if (selAbility && !(p.abilities || []).some(a => String(a).toLowerCase() === selAbility)) return false;
         //filtro por nível (optional)
         if (typeof p.level === 'number') {
           if (p.level < minL || p.level > maxL) return false;
@@ -178,6 +228,7 @@
         }
         return true;
       });
+      const sorted = sortPokemons(out);
       renderGrid(out);
     }
     function initLevelSlider(min, max) {
@@ -195,6 +246,22 @@
       });
       levelSliderEl.noUiSlider.on('change', applyFilters); // filtra ao soltar
     }
+    //botão filto level
+    // Atalhos de nível
+    document.querySelectorAll('.level-shortcuts button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const min = parseInt(btn.dataset.min || LEVEL_MIN);
+        const max = parseInt(btn.dataset.max || LEVEL_MAX);
+
+        selLevel = [min, max];
+
+        // Atualiza o slider visualmente
+        levelSliderEl.noUiSlider.set([min, max]);
+
+        // Aplica filtro
+        applyFilters();
+      });
+    });
 
 
     // carrega JSON e inicializa filtros + grid
@@ -211,14 +278,23 @@
 
       // filtros
       renderTypeFilter(getAllTypes(ALL));
+      renderAbilitiesFilter(getAllAbilities(ALL)); //<-- monta rádios de habilidades
       initLevelSlider(LEVEL_MIN, LEVEL_MAX);
 
+      // renderiza a grid inicial
+      sortSelect?.addEventListener('change', () => {
+        selSort = sortSelect.value;
+        applyFilters();
+      });
       // eventos dos rádios
       form?.addEventListener('change', () => {
         selType = (new FormData(form)).get('type') || '';
         applyFilters();
       });
-
+      formAbilities?.addEventListener('change', () => {
+        selAbility = (new FormData(formAbilities)).get('ability') || '';
+        applyFilters();
+      });
       // render inicial
       applyFilters();
     }
