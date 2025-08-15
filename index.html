@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokédex PxG</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+  <!-- noUiSlider (duplo thumb) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="header-left">
+        <h1 class="header-logo">Pokédex PxG</h1>
+        <input type="text" id="search" placeholder="Busque por nome...">
+      </div>
+      <div class="header-right">
+        <select id="sort">
+          <option>Dex ↑</option>
+          <option>Dex ↓</option>
+          <option>Nome ↑</option>
+          <option>Nome ↓</option>
+        </select>
+        <button>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon h-4 w-4 hidden dark:block" data-lov-id="src/pages/Index.tsx:72:12" data-lov-name="Moon" data-component-path="src/pages/Index.tsx" data-component-line="72" data-component-file="Index.tsx" data-component-name="Moon" data-component-content="%7B%22className%22%3A%22h-4%20w-4%20hidden%20dark%3Ablock%22%7D">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3">
+          <div class="sidebar">
+            <div class="sidebar-area">
+              <span>Tipos</span>
+              <form id="typeFilter" class="filter">
+                <fieldset>
+                </fieldset>
+              </form>
+            </div>
+            <div class="sidebar-area">
+              <span class="d-block mb-2">Nível</span>
+              <!-- SLIDER DUPLO -->
+              <div id="levelSlider"></div>
+              <span id="rangeOutput" class="range-values">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <span id="pokemon-lenght"></span>
+          <div class="card-area"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+  <script>
+    const TYPE_COLORS = {
+      bug: '#A8B820',
+      dark: '#705848',
+      dragon: '#7038F8',
+      electric: '#F8D030',
+      fairy: '#F0B6BC',
+      fighting: '#C03028',
+      fire: '#F08030',
+      flying: '#A890F0',
+      ghost: '#705898',
+      grass: '#78C850',
+      ground: '#E0C068',
+      ice: '#98D8D8',
+      normal: '#A8A878',
+      poison: '#A040A0',
+      psychic: '#F85888',
+      rock: '#B8A038',
+      steel: '#B8B8D0',
+      water: '#6890F0'
+    };
+    const cardEL = document.querySelector('.card-area');
+    const pokemonLenght = document.querySelector('#pokemon-lenght');
+    const form = document.getElementById('typeFilter');
+    const fieldset = form?.querySelector('fieldset');
+    const levelSliderEl = document.getElementById('levelSlider');
+    const rangeOutput = document.getElementById('rangeOutput');
+
+    // manter todos os pokemons em memória
+    let ALL = [];
+    let LEVEL_MIN = 1;
+    let LEVEL_MAX = 100;
+    let selType = '';      // rádio selecionado
+    let selLevel = [1, 100]; // [min,max] do slider
+    //helped para o pokedex
+    const pad3 = (n) => String(n ?? '').padStart(3, '0');
+
+    // Função para obter todos os tipos de Pokémon
+    function getAllTypes(arr) {
+      const set = new Set();
+      for (const p of arr) (p.types || []).forEach(t => set.add(t.trim()));
+      return [...set].sort((a, b) => a.localeCompare(b));
+    }
+    // Monta os rádios do filtro de tipo
+    function renderTypeFilter(types) {
+      fieldset.innerHTML = [
+        `<label><input type="radio" name="type" value="" checked> Todos</label>`,
+        ...types.map(t => `<label><input type="radio" name="type" value="${t.toLowerCase()}"> ${t}</label>`)
+      ].join('');
+    }
+
+    // Aplica o filtro selecionado e re-renderiza a grid
+    function applyTypeFilter() {
+      const selected = (new FormData(form)).get('type') || '';
+      const filtered = selected
+        ? ALL.filter(p => (p.types || []).some(t => t.toLowerCase() === selected))
+        : ALL;
+      renderGrid(filtered);
+    }
+
+    // HTML de 1 card
+    function renderCardHTML(p) {
+      if (!p) return '<p>Pokémon não encontrado</p>';
+
+      const types = (p.types || [])
+        .map(t => {
+          const color = TYPE_COLORS[t.toLowerCase()] || '#777'; // fallback cinza
+          return `<span class="badge" style="border: 1px solid ${color}; color:#fff">${t}</span>`;
+        })
+        .join('');
+
+      // corrigido: parênteses
+      const abilities = (p.abilities || [].slice(0, 2).join(', '));
+      const more = Math.max(0, (p.abilities?.length || 0) - 2);
+
+      const onerr = "this.onerror=null;this.remove();this.parentElement.textContent='Sem imagem';this.parentElement.style.color='#9ca3af'";
+
+      return `
+      <article class="card-area-item">
+        <h3>#${pad3(p.dex)} ${p.name ?? ''}</h3>
+        <div class="types">${types}</div>
+        <div class="img-wrap">
+          <img src="${p.icon || ''}" alt="${p.name || 'Pokémon'}" onerror="${onerr}" loading="lazy">
+        </div>
+        <div class="card-area-item-content">
+          <span>Nível ${p.level ?? '—'}</span>
+          <span>${abilities}${more ? ` +${more}` : ''}</span>
+        </div>
+      </article>
+    `;
+    }
+
+    // Renderiza a grid e o contator
+    function renderGrid(items) {
+      cardEL.innerHTML = items.map(renderCardHTML).join('');
+      if (pokemonLenght) pokemonLenght.innerText = `Total de Pokémons: ${items.length}`;
+    }
+    // aplica TODOS os filtros (tipo + nível)
+
+    function applyFilters() {
+      const [minL, maxL] = selLevel;
+      const out = ALL.filter(p => {
+        //filtro por tipo (optional)
+        if (selType && !(p.types || []).some(t => String(t).toLowerCase() === selType)) return false;
+        //filtro por nível (optional)
+        if (typeof p.level === 'number') {
+          if (p.level < minL || p.level > maxL) return false;
+        } else {
+          // se não tem level, esconde quando range não cobre tudo
+          if (minL > LEVEL_MIN || maxL < LEVEL_MAX) return false;
+        }
+        return true;
+      });
+      renderGrid(out);
+    }
+    function initLevelSlider(min, max) {
+      //valores iniciais: o rage todo
+      noUiSlider.create(levelSliderEl, {
+        start: [min, max],
+        connect: true,
+        range: { min, max },
+        step: 1
+      });
+      // atualiza label e estado
+      levelSliderEl.noUiSlider.on('update', (values) => {
+        selLevel = values.map(v => Math.round(+v));
+        rangeOutput.textContent = `Nível: ${selLevel[0]} - ${selLevel[1]}`;
+      });
+      levelSliderEl.noUiSlider.on('change', applyFilters); // filtra ao soltar
+    }
+
+
+    // carrega JSON e inicializa filtros + grid
+    async function carregarJSON() {
+      const res = await fetch('/data/pokexgames_pokemons.json');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      ALL = await res.json();
+
+      // calcula min/max reais de nível a partir dos dados
+      const levels = ALL.map(p => p.level).filter(v => typeof v === 'number');
+      LEVEL_MIN = Math.min(...levels);
+      LEVEL_MAX = Math.max(...levels);
+      selLevel = [LEVEL_MIN, LEVEL_MAX];
+
+      // filtros
+      renderTypeFilter(getAllTypes(ALL));
+      initLevelSlider(LEVEL_MIN, LEVEL_MAX);
+
+      // eventos dos rádios
+      form?.addEventListener('change', () => {
+        selType = (new FormData(form)).get('type') || '';
+        applyFilters();
+      });
+
+      // render inicial
+      applyFilters();
+    }
+
+    carregarJSON().catch(err => {
+      cardEL.innerHTML = `<p style="color:#ef4444">Falha ao carregar JSON: ${String(err)}</p>`;
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+</body>
+
+</html>

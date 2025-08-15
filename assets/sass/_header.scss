@@ -1,0 +1,70 @@
+body {
+  background-color: #020817;
+
+}
+
+header {
+  border-bottom: 1px solid #1d2839 ;
+  .container {
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      width: 60%;
+
+      .header-logo {
+        font-weight: 600;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+       margin-right: 20px;
+      }
+
+      input {
+        border: 1px solid #1e293b;
+        width: 80%;
+        background-color: transparent;
+        padding: 10px 25px;
+        border-radius: 20px;
+        color: #fff;
+      }
+    }
+    .header-right{
+      display: flex;
+      align-items: center;
+      justify-content:flex-end;
+      width: 40%;
+
+      select {
+        margin-right: 20px;
+        border: 1px solid #1e293b;
+        height: 40px;
+        background-color: transparent;
+        padding: 5px 20px;
+        border-radius: 20px;
+        color: #fff;
+        option{
+          background-color: #020817;
+
+        }
+      }
+
+      button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        svg {
+          width: 24px;
+          height: 24px;
+          color: #fff;
+        }
+      }
+    }
+
+  }
+}

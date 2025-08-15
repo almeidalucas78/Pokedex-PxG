@@ -1,0 +1,23 @@
+//COLORS
+$theme-color_1: #0b60b0;
+$theme-color_2: #40a2d8;
+$theme-color_3: #177755;
+$theme-color_4: #006b49;
+$light-background: #efefef;
+$color-gray: #efefef;
+$text-color: #fff;
+
+//FONTS
+$primary-font: 'Popins', sans-serif;
+
+//responsive
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1400px;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
