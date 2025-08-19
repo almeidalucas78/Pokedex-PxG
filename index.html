@@ -69,7 +69,10 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <span id="pokemon-lenght"></span>
+          <div class="card-header">
+            <span id="pokemon-lenght"></span>
+            <span id="search-result"></span>
+          </div>
           <div class="card-area"></div>
         </div>
       </div>
@@ -102,6 +105,7 @@
     };
     const cardEL = document.querySelector('.card-area');
     const pokemonLenght = document.querySelector('#pokemon-lenght');
+    const searchResult = document.querySelector('#search-result');
     const form = document.getElementById('typeFilter');
     const formAbilities = document.getElementById('abilitiesFilter');
     const fieldset = form?.querySelector('fieldset');
@@ -109,6 +113,8 @@
     const levelSliderEl = document.getElementById('levelSlider');
     const rangeOutput = document.getElementById('rangeOutput');
     const sortSelect = document.getElementById('sort');
+    const searchInput = document.getElementById('search');
+
 
     // manter todos os pokemons em memória
     let ALL = [];
@@ -118,6 +124,7 @@
     let selAbility = '';      // rádio selecionado
     let selLevel = [1, 100]; // [min,max] do slider
     let selSort = 'Dex ↑'; // opção de ordenação
+    let selSearch = ''; //termo de busca
 
     //helped para o pokedex
 
@@ -173,7 +180,7 @@
         .join('');
 
       // corrigido: parênteses
-      const abilities = (p.abilities || [].slice(0, 2).join(', '));
+      const abilities = (p.abilities || []).slice(0, 2).join(', ');
       const more = Math.max(0, (p.abilities?.length || 0) - 2);
 
       const onerr = "this.onerror=null;this.remove();this.parentElement.textContent='Sem imagem';this.parentElement.style.color='#9ca3af'";
@@ -193,10 +200,16 @@
     `;
     }
 
-    // Renderiza a grid e o contator
+       // Renderiza a grid e o contator
     function renderGrid(items) {
       cardEL.innerHTML = items.map(renderCardHTML).join('');
-      if (pokemonLenght) pokemonLenght.innerText = `Total de Pokémons: ${items.length}`;
+      if (pokemonLenght) pokemonLenght.innerText = ` ${items.length} resultados`;
+       searchResult.innerText = selSearch ? `Busca: "${selSearch}"` : '';
+      if (searchResult.textContent.trim()) {
+        searchResult.style.display = 'inline-block';
+      }else{
+        searchResult.style.display = 'none';
+      }
     }
 
     // Ordena os pokémons de acordo com a opção selecionada
@@ -219,6 +232,8 @@
         //filtro por tipo (optional)
         if (selType && !(p.types || []).some(t => String(t).toLowerCase() === selType)) return false;
         if (selAbility && !(p.abilities || []).some(a => String(a).toLowerCase() === selAbility)) return false;
+        //filtro por nome
+        if (selSearch && !(p.name || '').toLowerCase().includes(selSearch)) return false;
         //filtro por nível (optional)
         if (typeof p.level === 'number') {
           if (p.level < minL || p.level > maxL) return false;
@@ -229,8 +244,9 @@
         return true;
       });
       const sorted = sortPokemons(out);
-      renderGrid(out);
+      renderGrid(sorted);
     }
+
     function initLevelSlider(min, max) {
       //valores iniciais: o rage todo
       noUiSlider.create(levelSliderEl, {
@@ -281,11 +297,17 @@
       renderAbilitiesFilter(getAllAbilities(ALL)); //<-- monta rádios de habilidades
       initLevelSlider(LEVEL_MIN, LEVEL_MAX);
 
+      searchInput?.addEventListener('input', () => {
+        selSearch = searchInput.value.trim().toLowerCase();
+        applyFilters();
+      });
+
       // renderiza a grid inicial
       sortSelect?.addEventListener('change', () => {
         selSort = sortSelect.value;
         applyFilters();
       });
+
       // eventos dos rádios
       form?.addEventListener('change', () => {
         selType = (new FormData(form)).get('type') || '';
