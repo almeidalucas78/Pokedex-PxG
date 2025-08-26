@@ -11498,10 +11498,10 @@
     "icon": "https://wiki.pokexgames.com/images/8/8d/667-Litleo.png",
     "name_from_single": "Litleo",
     "level": 50,
-    "elemento_raw": "Normal / Fire.",
+    "elemento_raw": "Normal / Fire",
     "types": [
       "Normal",
-      "Fire."
+      "Fire"
     ],
     "habilidades_raw": "Dig.",
     "abilities": [
@@ -11645,9 +11645,9 @@
     "icon": "https://wiki.pokexgames.com/images/2/2f/672-Skiddo.png",
     "name_from_single": "Skiddo",
     "level": 40,
-    "elemento_raw": "Grass.",
+    "elemento_raw": "Grass",
     "types": [
-      "Grass."
+      "Grass"
     ],
     "habilidades_raw": "Dig, Rock smash, Cut and Headbutt.",
     "abilities": [
@@ -11691,9 +11691,9 @@
     "icon": "https://wiki.pokexgames.com/images/0/07/673-Gogoat.png",
     "name_from_single": "Gogoat",
     "level": 100,
-    "elemento_raw": "Grass.",
+    "elemento_raw": "Grass",
     "types": [
-      "Grass."
+      "Grass"
     ],
     "habilidades_raw": "Dig, Rock smash, Cut, Ride and Headbutt.",
     "abilities": [
@@ -11914,9 +11914,9 @@
     "icon": "https://wiki.pokexgames.com/images/d/d5/749-Mudbray.png",
     "name_from_single": "Mudbray",
     "level": 40,
-    "elemento_raw": "Ground.",
+    "elemento_raw": "Ground",
     "types": [
-      "Ground."
+      "Ground"
     ],
     "habilidades_raw": "Headbutt.",
     "abilities": [
@@ -11933,9 +11933,9 @@
     "icon": "https://wiki.pokexgames.com/images/c/cb/750-Mudsdale.png",
     "name_from_single": "Mudsdale",
     "level": 100,
-    "elemento_raw": "Ground.",
+    "elemento_raw": "Ground",
     "types": [
-      "Ground."
+      "Ground"
     ],
     "habilidades_raw": "Rock Smash, Ride and Headbutt.",
     "abilities": [

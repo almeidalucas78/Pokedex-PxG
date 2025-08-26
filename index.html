@@ -199,14 +199,14 @@
     `;
     }
 
-       // Renderiza a grid e o contator
+    // Renderiza a grid e o contator
     function renderGrid(items) {
       cardEL.innerHTML = items.map(renderCardHTML).join('');
       if (pokemonLenght) pokemonLenght.innerText = ` ${items.length} resultados`;
-       searchResult.innerText = selSearch ? `Busca: "${selSearch}"` : '';
+      searchResult.innerText = selSearch ? `Busca: "${selSearch}"` : '';
       if (searchResult.textContent.trim()) {
         searchResult.style.display = 'inline-block';
-      }else{
+      } else {
         searchResult.style.display = 'none';
       }
     }
@@ -281,7 +281,7 @@
 
     // carrega JSON e inicializa filtros + grid
     async function carregarJSON() {
-      const res = await fetch('/data/pokexgames_pokemons.json');
+      const res = await fetch('data/pokexgames_pokemons.json', { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       ALL = await res.json();
 
