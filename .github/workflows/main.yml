@@ -8,16 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: 📂 Sync files via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.FTP_HOST }}
+          server: ${{ secrets.FTP_HOST }}           # ex.: gatorXXXX.hostgator.com
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftps                            # FTPS explícito (porta 21)
           port: 21
-          server-dir: /home1/alme3355/public_html/pokedex-PxG/
+          security: loose                           # evita queda por mismatch de certificado
+          timeout: 60000                            # opcional: 60s por operação
+
+          server-dir: public_html/pokedex-PxG/      # relativo ao root FTP e com barra no final
           local-dir: ./
+
           exclude: |
             **/.git*
             **/.github/**
@@ -26,3 +31,4 @@ jobs:
             **/README.md
             **/*.map
           log-level: verbose
+
