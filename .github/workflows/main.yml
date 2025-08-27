@@ -3,32 +3,36 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch: {}
+
 jobs:
   web-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: 📂 Sync files via FTPS
+      - name: 📂 Sync files via FTPS (dry-run)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
-          server: ${{ secrets.FTP_HOST }}           # ex.: gatorXXXX.hostgator.com
+          server: ${{ secrets.FTP_HOST }}        # ex.: gatorXXXX.hostgator.com
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps                            # FTPS explícito (porta 21)
+          protocol: ftps
           port: 21
-          security: loose                           # evita queda por mismatch de certificado
-          timeout: 60000                            # opcional: 60s por operação
+          security: loose
+          timeout: 60000
 
-          server-dir: public_html/pokedex-PxG/      # relativo ao root FTP e com barra no final
-          local-dir: ./
+          server-dir: public_html/pokedex-PxG/   # relativo ao root do FTP
+          local-dir: ./                          # ou dist/ se tiver build
 
+          dry-run: true
+          log-level: verbose
           exclude: |
-            **/.git*
+            **/.git/**
             **/.github/**
+            **/.git*
+            **/.vscode/**
+            **/.idea/**
             **/node_modules/**
             **/.DS_Store
             **/README.md
             **/*.map
-          log-level: verbose
-
