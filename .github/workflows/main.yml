@@ -24,7 +24,7 @@ jobs:
           server-dir: public_html/pokedex-PxG/   # relativo ao root do FTP
           local-dir: ./                          # ou dist/ se tiver build
 
-          dry-run: true
+          dry-run: false
           log-level: verbose
           exclude: |
             **/.git/**
