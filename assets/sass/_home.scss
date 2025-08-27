@@ -189,4 +189,22 @@
       }
     }
   }
+  @media(max-width: 1366px) {
+   
+
+    .card-area {
+      .card-area-item {
+        width: 28%;
+      }
+    }
+  }
+  @media(max-width: 762px) {
+  
+    .card-area {
+      gap: 10px;
+      .card-area-item {
+        width: 47%;
+      }
+    }
+  }
 }
