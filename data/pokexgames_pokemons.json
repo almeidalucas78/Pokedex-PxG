@@ -917,9 +917,9 @@
     "icon": "https://wiki.pokexgames.com/images/3/38/115-Kangaskhan.png",
     "name_from_single": "Kangaskhan",
     "level": 80,
-    "elemento_raw": "Normal.",
+    "elemento_raw": "Normal",
     "types": [
-      "Normal."
+      "Normal"
     ],
     "habilidades_raw": "Cut, Dig, Rock Smash and Headbutt.",
     "abilities": [
@@ -1720,9 +1720,9 @@
     "icon": "https://wiki.pokexgames.com/images/d/de/128-Tauros.png",
     "name_from_single": "Tauros",
     "level": 60,
-    "elemento_raw": "Normal.",
+    "elemento_raw": "Normal",
     "types": [
-      "Normal."
+      "Normal"
     ],
     "habilidades_raw": "Rock Smash, Ride and Headbutt.",
     "abilities": [
@@ -2176,9 +2176,9 @@
     "icon": "https://wiki.pokexgames.com/images/c/ce/036-Clefable.png",
     "name_from_single": "Clefable",
     "level": 80,
-    "elemento_raw": "Fairy.",
+    "elemento_raw": "Fairy",
     "types": [
-      "Fairy."
+      "Fairy"
     ],
     "habilidades_raw": "Light, Rock Smash and Headbutt.",
     "abilities": [
@@ -4568,9 +4568,9 @@
     "icon": "https://wiki.pokexgames.com/images/0/0a/175-Togepi.png",
     "name_from_single": "Togepi",
     "level": 1,
-    "elemento_raw": "Fairy.",
+    "elemento_raw": "Fairy",
     "types": [
-      "Fairy."
+      "Fairy"
     ],
     "habilidades_raw": "Light",
     "abilities": [
@@ -8322,7 +8322,7 @@
     "elemento_raw": "Normal and Flying.",
     "types": [
       "Normal",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "None.",
     "abilities": [
@@ -8365,7 +8365,7 @@
     "elemento_raw": "Normal and Flying.",
     "types": [
       "Normal",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "None.",
     "abilities": [
@@ -8407,7 +8407,7 @@
     "elemento_raw": "Normal and Flying.",
     "types": [
       "Normal",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "Fly.",
     "abilities": [
@@ -8553,9 +8553,9 @@
     "icon": "https://wiki.pokexgames.com/images/1/1f/474-PorygonZ.png",
     "name_from_single": "Porygon-Z",
     "level": 100,
-    "elemento_raw": "Normal.",
+    "elemento_raw": "Normal",
     "types": [
-      "Normal."
+      "Normal"
     ],
     "habilidades_raw": "Teleport, Light, Fly and Blink.",
     "abilities": [
@@ -11379,7 +11379,7 @@
     "elemento_raw": "Normal / Flying.",
     "types": [
       "Normal",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "None.",
     "abilities": [
@@ -11399,7 +11399,7 @@
     "elemento_raw": "Fire / Flying.",
     "types": [
       "Fire",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "None.",
     "abilities": [
@@ -11419,7 +11419,7 @@
     "elemento_raw": "Fire / Flying.",
     "types": [
       "Fire",
-      "Flying."
+      "Flying"
     ],
     "habilidades_raw": "Cut, Light, Fly e Headbutt.",
     "abilities": [
@@ -11562,9 +11562,9 @@
     "icon": "https://wiki.pokexgames.com/images/9/99/669.Flab%C3%A9b%C3%A9.png",
     "name_from_single": "Flabebe.",
     "level": 20,
-    "elemento_raw": "Fairy.",
+    "elemento_raw": "Fairy",
     "types": [
-      "Fairy."
+      "Fairy"
     ],
     "habilidades_raw": "Light and Dig.",
     "abilities": [
@@ -11582,9 +11582,9 @@
     "icon": "https://wiki.pokexgames.com/images/9/90/670.Floette.png",
     "name_from_single": "Floette.",
     "level": 50,
-    "elemento_raw": "Fairy.",
+    "elemento_raw": "Fairy",
     "types": [
-      "Fairy."
+      "Fairy"
     ],
     "habilidades_raw": "Light and Dig.",
     "abilities": [
@@ -11602,9 +11602,9 @@
     "icon": "https://wiki.pokexgames.com/images/5/55/671.Florges.png",
     "name_from_single": "Florges.",
     "level": 100,
-    "elemento_raw": "Fairy.",
+    "elemento_raw": "Fairy",
     "types": [
-      "Fairy."
+      "Fairy"
     ],
     "habilidades_raw": "Light and Dig.",
     "abilities": [
